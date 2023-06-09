@@ -6,17 +6,17 @@
 #include <CGAL/property_map.h>
 #include <CGAL/boost/graph/IO/STL.h>
 #include <iostream>
-#include <fstream>
+#include <string>
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel Kernel;
 typedef CGAL::Polyhedron_3<Kernel> Polyhedron;
 typedef boost::graph_traits<Polyhedron>::face_descriptor face_descriptor;
 
-int main()
+int main(int argc, char **argv)
 {
     // create and read Polyhedron
     Polyhedron mesh;
-    CGAL::IO::read_STL("../0_FIGURE_EXAMPLES/figure26/csg_input/z.stl", mesh);
+    CGAL::IO::read_STL(argv[1], mesh);
     if ( mesh.empty() || !CGAL::is_triangle_mesh(mesh) )
     {
       std::cerr << "Input is not a triangle mesh." << std::endl;
@@ -37,8 +37,8 @@ int main()
     boost::associative_property_map<Facet_int_map> segment_property_map(internal_segment_map);
 
     // segment the mesh using custom parameters for number of clusters and smoothing lambda
-    const std::size_t n_clusters = 3;     // no. of clusters in soft clustering
-    const double smoothing_lambda = 0.01; // importance of surface features, suggested to be in-between [0,1]
+    const std::size_t n_clusters = 5;              // no. of clusters in soft clustering
+    double smoothing_lambda = std::stod(argv[2]);  // importance of surface features, suggested to be in [0,1]
     std::size_t n_segments = CGAL::segmentation_from_sdf_values(mesh, sdf_property_map, segment_property_map,
                                                                 n_clusters, smoothing_lambda);
     std::cout << "Number of segments: " << n_segments << std::endl;
