@@ -1,4 +1,4 @@
-// Based on CGAL's examples/Surface_mesh_segmentation/segmentation_from_sdf_values_example.cpp
+// Based on CGAL's examples/Surface_mesh_segmentation/segmentation_via_sdf_values_example.cpp
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Polyhedron_3.h>
@@ -23,24 +23,17 @@ int main(int argc, char **argv)
       return EXIT_FAILURE;
     }
 
-    // create a property-map for SDF values
-    typedef std::map<face_descriptor, double> Facet_double_map;
-    Facet_double_map internal_sdf_map;
-    boost::associative_property_map<Facet_double_map> sdf_property_map(internal_sdf_map);
-
-    // compute SDF values using default parameters for number of rays, and cone angle
-    CGAL::sdf_values(mesh, sdf_property_map);
-
     // create a property-map for segment-ids
     typedef std::map<face_descriptor, std::size_t> Facet_int_map;
     Facet_int_map internal_segment_map;
     boost::associative_property_map<Facet_int_map> segment_property_map(internal_segment_map);
 
-    // segment the mesh using custom parameters for number of clusters and smoothing lambda
-    const std::size_t n_clusters = 5;              // no. of clusters in soft clustering
-    double smoothing_lambda = std::stod(argv[2]);  // importance of surface features, suggested to be in [0,1]
-    std::size_t n_segments = CGAL::segmentation_from_sdf_values(mesh, sdf_property_map, segment_property_map,
-                                                                n_clusters, smoothing_lambda);
+    // calculate SDF values and segment the mesh
+    const double cone_angle = 2.0 / 3.0 * CGAL_PI;
+    const std::size_t n_rays = 25;
+    const std::size_t n_clusters = 5;
+    double smoothing_lambda = std::stod(argv[2]);
+    std::size_t n_segments = CGAL::segmentation_via_sdf_values(mesh, segment_property_map, cone_angle, n_rays, n_clusters, smoothing_lambda);
     std::cout << "Number of segments: " << n_segments << std::endl;
 
     // print segment-ids
