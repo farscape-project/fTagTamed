@@ -16,10 +16,9 @@ int main(int argc, char **argv)
 {
     // create and read Polyhedron
     Polyhedron mesh;
-    CGAL::IO::read_STL(argv[1], mesh);
-    if ( mesh.empty() || !CGAL::is_triangle_mesh(mesh) )
+    if ( !CGAL::IO::read_STL(argv[1], mesh) || !CGAL::is_triangle_mesh(mesh) )
     {
-      std::cerr << "Input is not a triangle mesh." << std::endl;
+      std::cerr << "Input is not an STL triangle mesh." << std::endl;
       return EXIT_FAILURE;
     }
 
