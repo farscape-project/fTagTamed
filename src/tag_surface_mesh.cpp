@@ -2,6 +2,7 @@
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Polyhedron_3.h>
+#include <CGAL/Polyhedron_items_with_id_3.h>
 #include <CGAL/boost/graph/IO/STL.h>
 #include <CGAL/mesh_segmentation.h>
 #include <CGAL/property_map.h>
@@ -10,7 +11,10 @@
 #include <string>
 
 typedef CGAL::Exact_predicates_inexact_constructions_kernel Kernel;
-typedef CGAL::Polyhedron_3<Kernel> Polyhedron;
+typedef CGAL::Polyhedron_items_with_id_3 Items;
+typedef CGAL::Polyhedron_3<Kernel, Items> Polyhedron;
+typedef boost::graph_traits<Polyhedron>::vertex_descriptor vertex;
+typedef boost::graph_traits<Polyhedron>::halfedge_descriptor halfedge;
 typedef boost::graph_traits<Polyhedron>::face_descriptor facet;
 
 int main(int argc, char **argv)
@@ -41,6 +45,42 @@ int main(int argc, char **argv)
     for( facet f : mesh.facet_handles() )
       tag_file << std::stoi(argv[2]) + ++facet_segment_map[f] << std::endl;
     tag_file.close();
+
+    // early exit if no MSH filename provided
+    if( argc < 6 )
+      return EXIT_SUCCESS;
+
+    // enumerate vertices and facets
+    std::size_t vv = 0, ff = 0;
+    for( vertex v : mesh.vertex_handles() )
+      v->id() = ++vv;
+    for( facet f : mesh.facet_handles() )
+      f->id() = ++ff;
+
+    // write tagged surface mesh to MSH file format version 2.2
+    std::ofstream msh_file;
+    msh_file.open(argv[5], std::ios_base::out | std::ios_base::trunc);
+    msh_file << "$MeshFormat"                  << std::endl;
+    msh_file << "2.2 0 " << sizeof(double)     << std::endl;
+    msh_file << "$EndMeshFormat"               << std::endl;
+    msh_file << "$Nodes"                       << std::endl;
+    msh_file << mesh.size_of_vertices()        << std::endl;
+    for( vertex v : mesh.vertex_handles() )
+      msh_file << v->id() << " " << v->point() << std::endl;
+    msh_file << "$EndNodes"                    << std::endl;
+    msh_file << "$Elements"                    << std::endl;
+    msh_file << mesh.size_of_facets()          << std::endl;
+    for( facet f : mesh.facet_handles() ) {
+      msh_file << f->id() << " 2 2"
+               << " " << facet_segment_map[f]
+               << " " << facet_segment_map[f];
+      halfedge h = f->halfedge();
+      do
+        msh_file << " " << h->vertex()->id();
+      while( (h = h->next()) != f->halfedge() );
+      msh_file                                 << std::endl;
+    }
+    msh_file << "$EndElements"                 << std::endl;
 
     return EXIT_SUCCESS;
 }
