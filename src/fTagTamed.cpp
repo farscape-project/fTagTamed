@@ -19,68 +19,67 @@ typedef boost::graph_traits<Polyhedron>::face_descriptor facet;
 
 int main(int argc, char **argv)
 {
-    // create and read Polyhedron
-    Polyhedron mesh;
-    if ( !CGAL::IO::read_STL(argv[3], mesh) || !CGAL::is_triangle_mesh(mesh) ) {
-      std::cerr << "Input is not an STL triangle mesh." << std::endl;
-      return EXIT_FAILURE;
-    }
+  // create and read Polyhedron
+  Polyhedron mesh;
+  if( !CGAL::IO::read_STL(argv[3], mesh) || !CGAL::is_triangle_mesh(mesh) ) {
+    std::cerr << "Input is not an STL triangle mesh." << std::endl;
+    return EXIT_FAILURE;
+  }
 
-    // create a property-map for segment-ids
-    typedef std::map<facet, std::size_t> Facet_int_map;
-    Facet_int_map internal_segment_map;
-    boost::associative_property_map<Facet_int_map> facet_segment_map(internal_segment_map);
+  // create a property-map for segment ids
+  typedef std::map<facet, std::size_t> Facet_int_map;
+  Facet_int_map internal_segment_map;
+  boost::associative_property_map<Facet_int_map> facet_segment_map(internal_segment_map);
 
-    // calculate SDF values and segment the mesh
-    const double cone_angle = 2.0 / 3.0 * CGAL_PI;
-    const std::size_t n_rays = 25;
-    const std::size_t n_clusters = 5;
-    double smoothing_lambda = std::stod(argv[1]);
-    std::size_t n_segments = CGAL::segmentation_via_sdf_values(mesh, facet_segment_map, cone_angle, n_rays, n_clusters, smoothing_lambda);
-    std::cerr << "Number of segments: " << n_segments << std::endl;
+  // calculate SDF values and segment the mesh
+  const double cone_angle = 2.0 / 3.0 * CGAL_PI;
+  const std::size_t n_rays = 25;
+  const std::size_t n_clusters = 5;
+  double smoothing_lambda = std::stod(argv[1]);
+  std::size_t n_segments = CGAL::segmentation_via_sdf_values(mesh, facet_segment_map, cone_angle, n_rays, n_clusters, smoothing_lambda);
+  std::cerr << "Number of segments: " << n_segments << std::endl;
 
-    // write offset segment-ids in { offset + 1, ..., offset + n_segments } to (possibly existing) tag file
-    std::ofstream tag_file;
-    tag_file.open(argv[4], std::ios_base::out | std::ios_base::app);
-    for( facet f : mesh.facet_handles() )
-      tag_file << std::stoi(argv[2]) + ++facet_segment_map[f] << std::endl;
-    tag_file.close();
+  // write offset segment ids in { offset + 1, ..., offset + n_segments } to (possibly existing) tag file
+  std::ofstream tag_file;
+  tag_file.open(argv[4], std::ios_base::out | std::ios_base::app);
+  for( facet f : mesh.facet_handles() )
+    tag_file << std::stoi(argv[2]) + ++facet_segment_map[f] << std::endl;
 
-    // early exit if no MSH filename provided
-    if( argc < 6 )
-      return EXIT_SUCCESS;
-
-    // enumerate vertices and facets
-    std::size_t vv = 0, ff = 0;
-    for( vertex v : mesh.vertex_handles() )
-      v->id() = ++vv;
-    for( facet f : mesh.facet_handles() )
-      f->id() = ++ff;
-
-    // write tagged surface mesh to MSH file format version 2.2
-    std::ofstream msh_file;
-    msh_file.open(argv[5], std::ios_base::out | std::ios_base::trunc);
-    msh_file << "$MeshFormat"                  << std::endl;
-    msh_file << "2.2 0 " << sizeof(double)     << std::endl;
-    msh_file << "$EndMeshFormat"               << std::endl;
-    msh_file << "$Nodes"                       << std::endl;
-    msh_file << mesh.size_of_vertices()        << std::endl;
-    for( vertex v : mesh.vertex_handles() )
-      msh_file << v->id() << " " << v->point() << std::endl;
-    msh_file << "$EndNodes"                    << std::endl;
-    msh_file << "$Elements"                    << std::endl;
-    msh_file << mesh.size_of_facets()          << std::endl;
-    for( facet f : mesh.facet_handles() ) {
-      msh_file << f->id() << " 2 2"
-               << " " << facet_segment_map[f]
-               << " " << facet_segment_map[f];
-      halfedge h = f->halfedge();
-      do
-        msh_file << " " << h->vertex()->id();
-      while( (h = h->next()) != f->halfedge() );
-      msh_file                                 << std::endl;
-    }
-    msh_file << "$EndElements"                 << std::endl;
-
+  // early exit if no MSH filename provided
+  if( argc < 6 )
     return EXIT_SUCCESS;
+
+  // enumerate vertices and facets
+  std::size_t vv = 0, ff = 0;
+  for( vertex v : mesh.vertex_handles() )
+    v->id() = ++vv;
+  for( facet f : mesh.facet_handles() )
+    f->id() = ++ff;
+
+  // write tagged surface mesh to a MSH 2.2 file
+  std::ofstream msh_file;
+  msh_file.open(argv[5], std::ios_base::out | std::ios_base::trunc);
+  msh_file << "$MeshFormat"                  << std::endl;
+  msh_file << "2.2 0 " << sizeof(double)     << std::endl;
+  msh_file << "$EndMeshFormat"               << std::endl;
+  msh_file << "$Nodes"                       << std::endl;
+  msh_file << mesh.size_of_vertices()        << std::endl;
+  for( vertex v : mesh.vertex_handles() )
+    msh_file << v->id() << " " << v->point() << std::endl;
+  msh_file << "$EndNodes"                    << std::endl;
+  msh_file << "$Elements"                    << std::endl;
+  msh_file << mesh.size_of_facets()          << std::endl;
+  for( facet f : mesh.facet_handles() ) {
+    msh_file << f->id() << " 2 2"
+              << " " << facet_segment_map[f]
+              << " " << facet_segment_map[f];
+    halfedge h = f->halfedge();
+    do
+      msh_file << " " << h->vertex()->id();
+    while( (h = h->next()) != f->halfedge() );
+    msh_file                                 << std::endl;
+  }
+  msh_file << "$EndElements"                 << std::endl;
+
+  return EXIT_SUCCESS;
 }
