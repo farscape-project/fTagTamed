@@ -11,7 +11,7 @@ CGAL_VERSION=5.5.2
 ########### Installation environment
 ###########
 export TOPLEVEL=$PWD
-export DEP_DIR=$TOPLEVEL/dep
+export DEP_DIR=$TOPLEVEL
 export BUILD_DIR=$DEP_DIR/pkg
 export PARCOMP=$(nproc)
 
@@ -42,7 +42,7 @@ mv CGAL-$CGAL_VERSION $CGAL_DIR
 ###########
 ########### Setup script
 ###########
-SETUP_SCRIPT=env_cgal.sh
+SETUP_SCRIPT=env_dep.sh
 
 cd $DEP_DIR
 rm -f $SETUP_SCRIPT

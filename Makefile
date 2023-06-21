@@ -1,5 +1,5 @@
-fTagTamed: src/tag_surface_mesh.cpp | dep
-	. ./dep/env_cgal.sh && $(CXX) -I$$CGAL_DIR/include -I$$BOOST_DIR -Ofast -o $@ $< -lgmp
+fTagTamed: src/fTagTamed.cpp | dep/env_dep.sh
+	. $| && $(CXX) -I$$CGAL_DIR/include -I$$BOOST_DIR -Ofast -o $@ $^ -lgmp
 
-dep:
-	./cfg/get_dep.sh
+dep/env_dep.sh:
+	cd $(@D) && ./get_dep.sh
