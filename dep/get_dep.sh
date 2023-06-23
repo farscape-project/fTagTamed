@@ -18,12 +18,20 @@ export BUILD_DIR=$DEP_DIR/pkg
 mkdir -p $BUILD_DIR
 
 ###########
+########### Curl or Wget?
+###########
+if   command -v curl &> /dev/null; then export get='curl -LO'
+elif command -v wget &> /dev/null; then export get='wget'
+else echo "Neither curl nor wget were found. Please install one of them."
+fi
+
+###########
 ########### GMP
 ###########
 GMP_DIR=$DEP_DIR/gmp-$GMP_VERSION
 
 cd $BUILD_DIR
-wget https://gmplib.org/download/gmp/gmp-$GMP_VERSION.tar.xz
+$get https://gmplib.org/download/gmp/gmp-$GMP_VERSION.tar.xz
 tar xpf gmp-$GMP_VERSION.tar.xz
 mkdir gmp-${GMP_VERSION}_build
 cd gmp-${GMP_VERSION}_build
@@ -39,7 +47,7 @@ BOOST_DIR=$DEP_DIR/boost-$BOOST_VERSION
 BOOST_VSTR=$(sed 's/\./\_/g' <<< $BOOST_VERSION)
 
 cd $BUILD_DIR
-wget https://boostorg.jfrog.io/artifactory/main/release/$BOOST_VERSION/source/boost_$BOOST_VSTR.tar.gz
+$get https://boostorg.jfrog.io/artifactory/main/release/$BOOST_VERSION/source/boost_$BOOST_VSTR.tar.gz
 tar xpzf boost_$BOOST_VSTR.tar.gz
 mv boost_$BOOST_VSTR $BOOST_DIR
 
@@ -49,7 +57,7 @@ mv boost_$BOOST_VSTR $BOOST_DIR
 CGAL_DIR=$DEP_DIR/cgal-$CGAL_VERSION
 
 cd $BUILD_DIR
-wget https://github.com/CGAL/cgal/releases/download/v$CGAL_VERSION/CGAL-$CGAL_VERSION.tar.xz
+$get https://github.com/CGAL/cgal/releases/download/v$CGAL_VERSION/CGAL-$CGAL_VERSION.tar.xz
 tar xpf CGAL-$CGAL_VERSION.tar.xz
 mv CGAL-$CGAL_VERSION $CGAL_DIR
 
