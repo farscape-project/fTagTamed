@@ -62,5 +62,7 @@ SETUP_SCRIPT=env_dep.sh
 cd $DEP_DIR
 rm -f $SETUP_SCRIPT
 
-echo "export BOOST_DIR='$BOOST_DIR'" >> $SETUP_SCRIPT
-echo "export CGAL_DIR='$CGAL_DIR'" >> $SETUP_SCRIPT
+echo "export GMP_INC_DIR='$GMP_DIR/include'" >> $SETUP_SCRIPT
+echo "export GMP_LIB_DIR='$GMP_DIR/lib'" >> $SETUP_SCRIPT
+echo "export BOOST_INC_DIR='$BOOST_DIR'" >> $SETUP_SCRIPT
+echo "export CGAL_INC_DIR='$CGAL_DIR/include'" >> $SETUP_SCRIPT

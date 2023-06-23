@@ -19,8 +19,9 @@ cd fTagTamed
 make
 ```
 
-Note that the first time you run `make`, a couple of dependencies,
-[Boost](https://www.boost.org) and [CGAL](https://www.cgal.org), will be
+Note that the first time you run `make`, a few dependencies, namely
+[GMP](https://gmplib.org), [Boost](https://www.boost.org) and
+[CGAL](https://www.cgal.org), will be
 automatically downloaded and installed under `dep/`.
 
 ### Usage
