@@ -10,8 +10,8 @@ as many tags as triangles in the provided surface mesh.
 
 ### Installation
 
-To install fTagTamed, simply clone this repo and build the app's executable
-using the included makefile:
+To install fTagTamed on GNU/Linux or on macOS, simply clone this repo and build
+the app's executable using the included makefile:
 
 ```
 git clone https://github.com/farscape-project/fTagTamed.git
