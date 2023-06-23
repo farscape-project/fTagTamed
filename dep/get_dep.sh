@@ -14,7 +14,6 @@ CGAL_VERSION=5.5.2
 export TOPLEVEL=$PWD
 export DEP_DIR=$TOPLEVEL
 export BUILD_DIR=$DEP_DIR/pkg
-export PARCOMP=$(nproc)
 
 mkdir -p $BUILD_DIR
 
