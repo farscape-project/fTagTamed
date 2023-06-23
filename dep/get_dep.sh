@@ -4,6 +4,7 @@ set -e
 ###########
 ########### Software versions
 ###########
+GMP_VERSION=6.2.1
 BOOST_VERSION=1.82.0
 CGAL_VERSION=5.5.2
 
@@ -16,6 +17,20 @@ export BUILD_DIR=$DEP_DIR/pkg
 export PARCOMP=$(nproc)
 
 mkdir -p $BUILD_DIR
+
+###########
+########### GMP
+###########
+GMP_DIR=$DEP_DIR/gmp-$GMP_VERSION
+
+cd $BUILD_DIR
+wget https://gmplib.org/download/gmp/gmp-$GMP_VERSION.tar.xz
+tar xpf gmp-$GMP_VERSION.tar.xz
+mkdir gmp-${GMP_VERSION}_build
+cd gmp-${GMP_VERSION}_build
+$BUILD_DIR/gmp-$GMP_VERSION/configure --prefix=$GMP_DIR
+make -j
+make install
 
 ###########
 ########### Boost
