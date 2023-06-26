@@ -51,11 +51,11 @@ int main(int argc, char **argv)
   std::size_t n_segments = CGAL::segmentation_via_sdf_values(mesh, facet_segment_map, cone_angle, n_rays, n_clusters, smoothing_lambda);
   std::cerr << "Number of segments: " << n_segments << std::endl;
 
-  // write offset segment ids in { offset + 1, ..., offset + n_segments } to (possibly existing) tag file
+  // write offset segment ids in { offset, ..., offset + n_segments - 1 } to (possibly existing) tag file
   std::ofstream tag_file;
   tag_file.open(argv[4], std::ios_base::out | std::ios_base::app);
   for( facet f : mesh.facet_handles() )
-    tag_file << std::stoi(argv[2]) + ++facet_segment_map[f] << std::endl;
+    tag_file << std::stoi(argv[2]) + facet_segment_map[f] << std::endl;
 
   // early exit if no MSH filename provided
   if( argc < 6 )
@@ -83,8 +83,8 @@ int main(int argc, char **argv)
   msh_file << mesh.size_of_facets()          << std::endl;
   for( facet f : mesh.facet_handles() ) {
     msh_file << f->id() << " 2 2"
-              << " " << facet_segment_map[f]
-              << " " << facet_segment_map[f];
+              << " " << std::stoi(argv[2]) + facet_segment_map[f]
+              << " " << std::stoi(argv[2]) + facet_segment_map[f];
     halfedge h = f->halfedge();
     do
       msh_file << " " << h->vertex()->id();

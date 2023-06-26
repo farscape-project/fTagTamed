@@ -27,8 +27,8 @@ automatically downloaded and installed under `dep/`.
 ### Usage
 
 fTagTamed provides limited tuning for the segmentation algorithm and instead
-focuses on an easy to use interface. The following is a list of the available
-options:
+focuses on an easy to use interface. The following is a description of the
+available options:
 
 ```
 usage: fTagTamed smoothing_lambda tag_offset input_stl_file output_tag_file [output_msh_file]
@@ -40,6 +40,6 @@ usage: fTagTamed smoothing_lambda tag_offset input_stl_file output_tag_file [out
   output_msh_file:  the file to which the tagged surface mesh will be written to (MSH 2.2)
 ```
 
-If you wish to fine-tune any of the segmentation algorithm parameters, we
+If you wish to fine-tune any of the other segmentation algorithm parameters, we
 encourage you to inspect and edit the (very short) source code in
 `src/fTagTamed.cpp`. All contributions are welcome.
