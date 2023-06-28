@@ -31,9 +31,10 @@ focuses on an easy to use interface. The following is a description of the
 available options:
 
 ```
-usage: fTagTamed cone_angle smoothing_lambda tag_offset input_stl_file output_tag_file [output_msh_file]
+usage: fTagTamed cone_angle n_clusters smoothing_lambda tag_offset input_stl_file output_tag_file [output_msh_file]
 
   cone_angle:       the aperture of the ray sampling cone (floating-point in [0, 180[)
+  n_clusters:       the number of segments without considering connectivity (strictly positive integer)
   smoothing_lambda: the higher the fewer the number of segments (floating-point in [0, 1])
   tag_offset:       the initial tag from which to count from (strictly positive integer)
   input_stl_file:   the file describing the surface mesh to be tagged (STL)
