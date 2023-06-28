@@ -31,15 +31,15 @@ focuses on an easy to use interface. The following is a description of the
 available options:
 
 ```
-usage: fTagTamed cone_angle n_clusters smoothing_lambda tag_offset input_stl_file output_tag_file [output_msh_file]
+usage: fTagTamed aperture clusters smoothing offset input_stl output_tags [output_msh]
 
-  cone_angle:       the aperture of the ray sampling cone (floating-point in [0, 180[)
-  n_clusters:       the number of segments without considering connectivity (strictly positive integer)
-  smoothing_lambda: the higher the fewer the number of segments (floating-point in [0, 1])
-  tag_offset:       the initial tag from which to count from (strictly positive integer)
-  input_stl_file:   the file describing the surface mesh to be tagged (STL)
-  output_tag_file:  the file to which the list of tags will be written to (Plain Text)
-  output_msh_file:  the file to which the tagged surface mesh will be written to (MSH 2.2)
+  aperture    floating-point in [0, 180[ aperture of the ray sampling cone on each facet
+  clusters    strictly positive integer  number of segments without considering connectivity
+  smoothing   floating-point in [0, 1]   the higher the fewer the number of segments
+  offset      strictly positive integer  initial tag from which to count from
+  input_stl   STL                        file describing the surface mesh to be tagged
+  output_tags Plain Text                 file to which the list of tags will be appended to
+  output_msh  MSH 2.2                    file to which the tagged surface mesh will be written to
 ```
 
 If you wish to fine-tune any of the other segmentation algorithm parameters, we

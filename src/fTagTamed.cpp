@@ -21,15 +21,15 @@ int main(int argc, char **argv)
 {
   // check for the correct number of command line arguments
   if( !(argc == 7 || argc == 8) ) {
-    std::cerr << "usage: fTagTamed cone_angle n_clusters smoothing_lambda tag_offset input_stl_file output_tag_file [output_msh_file]" << std::endl;
-    std::cerr << ""                                                                                                                    << std::endl;
-    std::cerr << "  cone_angle:       the aperture of the ray sampling cone (floating-point in [0, 180[)"                << std::endl;
-    std::cerr << "  n_clusters:       the number of segments without considering connectivity (strictly positive integer)"             << std::endl;
-    std::cerr << "  smoothing_lambda: the higher the fewer the number of segments (floating-point in [0, 1])"                          << std::endl;
-    std::cerr << "  tag_offset:       the initial tag from which to count from (strictly positive integer)"                            << std::endl;
-    std::cerr << "  input_stl_file:   the file describing the surface mesh to be tagged (STL)"                                         << std::endl;
-    std::cerr << "  output_tag_file:  the file to which the list of tags will be written to (Plain Text)"                              << std::endl;
-    std::cerr << "  output_msh_file:  the file to which the tagged surface mesh will be written to (MSH 2.2)"                              << std::endl;
+    std::cerr << "usage: fTagTamed aperture clusters smoothing offset input_stl output_tags [output_msh]"             << std::endl;
+    std::cerr << ""                                                                                                   << std::endl;
+    std::cerr << "  aperture:    floating-point in [0, 180[ aperture of the ray sampling cone on each facet"          << std::endl;
+    std::cerr << "  clusters:    strictly positive integer  number of segments without considering connectivity"      << std::endl;
+    std::cerr << "  smoothing:   floating-point in [0, 1]   the higher the fewer the number of segments"              << std::endl;
+    std::cerr << "  offset:      strictly positive integer  initial tag from which to count from"                     << std::endl;
+    std::cerr << "  input_stl:   STL                        file describing the surface mesh to be tagged"            << std::endl;
+    std::cerr << "  output_tags: Plain Text                 file to which the list of tags will be appended to"       << std::endl;
+    std::cerr << "  output_msh:  MSH 2.2                    file to which the tagged surface mesh will be written to" << std::endl;
     return EXIT_FAILURE;
   }
 
