@@ -47,7 +47,7 @@ BOOST_DIR=$DEP_DIR/boost-$BOOST_VERSION
 BOOST_VSTR=$(sed 's/\./\_/g' <<< $BOOST_VERSION)
 
 cd $BUILD_DIR
-$get https://boostorg.jfrog.io/artifactory/main/release/$BOOST_VERSION/source/boost_$BOOST_VSTR.tar.gz
+$get https://archives.boost.io/release/$BOOST_VERSION/source/boost_$BOOST_VSTR.tar.gz
 tar xpzf boost_$BOOST_VSTR.tar.gz
 mv boost_$BOOST_VSTR $BOOST_DIR
 
